@@ -1,0 +1,75 @@
+#idCabecalho{
+  display: flex;
+  align-items: center;
+  background-color: #068ed0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-container {
+  display: flex;
+  position: relative; 
+  align-content: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.input-control{
+  width: 25rem;
+}
+
+.checkbox-control{
+  display: inline-block;
+  
+}
+
+.rodape{
+  display: inline-flex;
+  align-items: center;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+#btnCadastrar{
+  display: flex;
+  position: relative;
+  justify-content: center;  
+  align-content: center;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"] {
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder,
+input[type="email"]::placeholder {
+  color: #aaa;
+}
+
+table{
+  margin: auto;
+  text-align: center;
+}
+
