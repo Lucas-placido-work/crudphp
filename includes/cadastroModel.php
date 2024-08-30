@@ -14,7 +14,6 @@ class CadastroModel {
         
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("ssssiiiii", $nome, $data_nascimento, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms);
-        
         if ($stmt->execute()) {
             $stmt->close();
             $this->conn->close();
