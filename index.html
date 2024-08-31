@@ -11,7 +11,7 @@
   <div class="container-fluid">
     <header>
       <div class="p-3 mb-2 text-white" id="idCabecalho">
-        <img src="assets\logo_alphacode.png" alt="logo_alphacode">
+        <img id="editar" src="assets\logo_alphacode.png" alt="logo_alphacode">
         <h2 style="font-weight: bold;">Cadastro de Contatos</h2>
       </div>
     </header>
@@ -76,11 +76,11 @@
     <br/>
     <hr/>
     <br/>
-    <div class="table-responsive">
-      <table style="width: 80%;" class="table">
+    <div class="table-responsive" id="spaceTable">
+      <!-- <table style="width: 80%;" class="table">
         <thead class="table-dark">
           <tr>
-            <th scope="col" class="text-white">Nome</th>
+            <th scope="col">Nome</th>
             <th scope="col">Data de Nascimento</th>
             <th scope="col">E-mail</th>
             <th scope="col">Celular para contato</th>
@@ -100,7 +100,7 @@
               </div>
             </td>
           </tr>
-        </tbody>
+        </tbody> -->
             
       </table>
     </div>
@@ -127,34 +127,73 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/color/jquery.color-3.0.0.js" integrity="sha256-nXuT4oV5wsIpHV/V7Ay53Vf/1rg2lqpiGWoP9CRk2tM=" crossorigin="anonymous"></script>
+  <script src="auxiliares.js"></script>
   <script>
     $(document).ready(function(){
-        $("form").submit(function(){
-          event.preventDefault()
-          $.ajax({
-              data: $(this).serialize(),
-              url: "router.php?action=create", 
-              type: "POST",
-              success: function(response) {
-                  alert("Resposta do servidor: " + response);
-              },
-              error: function() {
-                  alert("Erro: ");
-              }
-          });
-        });
+      $("form").submit(function(){
+        event.preventDefault()
         $.ajax({
-            data: $(this).serialize(),
-            url: "router.php?action=read", 
-            type: "GET",
-            success: function(response) {
-                alert("Resposta do servidor: " + response);
-            },
-            error: function() {
-                alert("Erro: ");
-            }
-          });
+          data: $(this).serialize(),
+          url: "router.php?action=create", 
+          type: "POST",
+          dataType: "json",
+          success: function(response) {
+            console.log("Resposta do servidor: " + response);
+          },
+          error: function() {
+            console.log("Erro: ");
+          }
         });
+      });
+      $.ajax({
+        data: $(this).serialize(),
+        url: "router.php?action=read", 
+        type: "GET",
+        dataType: 'json',
+        success: function(response) {
+          render_table(response);
+          console.log("Resposta do servidor: " + response);
+        },
+        error: function() {
+          console.log("Erro: ");
+        }
+      });
+    });
+
+    function render_table(dados){
+      if(dados.length != 0){
+        let tabela = "<table style='width: 80%;' class='table' id='table-data'><thead class='table-dark'><tr><th>Nome</th><th>Data de Nascimento</th><th>E-mail</th><th>Celular para contato</th><th>Ações</th></tr></thead>";
+        
+        dados.forEach(item => {
+          tabela += "<tbody><tr>" 
+          + '<td>' + item['nome'] + '</td>' 
+          + '<td>' + item['data_nascimento'] + '</td>'
+          + '<td>' + item['email'] + '</td>'
+          + '<td>' + item['celular'] + '</td>';
+          
+          tabela += '<td>'
+          + '<div>'
+          + '<img class="editar" data-id="' + item.id + '" src="assets\\editar.png" alt="editar"></img>'
+          + '<img class="excluir" data-id="' + item.id + '" src="assets\\excluir.png" alt="excluir"></img>'
+          + '</div>'
+          + '</td>';
+          tabela += "</tr></tbody>";
+          
+        });
+        tabela += '</table)>';
+        
+        $("#spaceTable").html(tabela);
+
+        $(".editar").click(function(event) {
+          var itemId = $(this).data("id");
+          //montar a modal.
+        });
+
+        $(".excluir").click(function(event) {
+          var itemId = $(this).data("id");
+        });
+      }
+    }
 
   </script>
 </body>
