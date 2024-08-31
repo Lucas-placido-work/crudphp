@@ -32,9 +32,8 @@ form {
   width: 25rem;
 }
 
-.checkbox-control{
-  display: inline-block;
-  
+.form-group-checkbox{
+  display: inline-block;  
 }
 
 .rodape{
