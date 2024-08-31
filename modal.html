@@ -1,0 +1,53 @@
+<div class="modal" id="modalEdit" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Contato</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="form-container">
+          <div class="form-group">
+            <label for="nome">Nome Completo</label>
+            <input type="text" class="form-control input-control" id="nomeEdit" name="nome" placeholder="Ex.: Lucas Placido dos Santos">
+          </div>
+          <div class="form-group">
+            <label for="data">Data de Nascimento</label>
+            <input type="number" class="form-control input-control" id="dataEdit" name="data" placeholder="Ex.: 08/02/2001">
+          </div>
+          <div class="form-group">
+            <label for="mail">E-mail</label>
+            <input type="email" class="form-control input-control" id="mailEdit" name="mail" placeholder="Ex.: lucasplacido.work@gmail.com">
+          </div>
+          <div class="form-group">
+            <label for="profissao">Profissão</label>
+            <input type="text" class="form-control input-control" id="profissaoEdit" name="profissao" placeholder="Ex.: Desenvolvedor Fullstack">
+          </div>
+          <div class="col form-group">
+            <label for="telefone">Telefone para contato</label>
+            <input type="number" class="form-control input-control" id="telefoneEdit" name="telefone" placeholder="Ex.: (41) 3275-4898">
+          </div>
+          <div class="form-group">
+            <label for="celular">Celular para contato</label>
+            <input type="number" class="form-control input-control" id="celularEdit" name="celular" placeholder="Ex.: (41) 9 9612-8992">
+          </div>
+          <div class="form-group-checkbox">
+            <input type="checkbox" class="checkbox-control" id="checkWppEdit" name="checkWpp">
+            <label for="checkWpp">Número de celular possui WhatsApp</label>
+          </div>
+          <div class="form-group-checkbox">
+            <input type="checkbox" class="checkbox-control" id="notifyEmailEdit" name="notifyEmail">
+            <label for="notifyEmail">Enviar notificações por E-mail</label>
+          </div>
+          <div class="form-group-checkbox">
+            <input type="checkbox" class="checkbox-control" id="notifySmsEdit" name="notifySms">
+            <label for="notifySms">Enviar notificações por SMS</label>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="salvarAlteracoes">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
