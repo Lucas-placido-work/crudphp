@@ -1,7 +1,7 @@
 <?php
-require_once 'includes/cadastroController.php';
+require_once 'includes/contatoController.php';
 
-$controller = new CadastroController();
+$controller = new ContatoController();
 
 $action = $_GET['action'] ?? 'read';
 $data = $_POST;
