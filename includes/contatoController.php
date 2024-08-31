@@ -1,7 +1,7 @@
 <?php
-  require_once 'cadastroModel.php';
+  require_once 'contatoModel.php';
 
-  class CadastroController{
+  class ContatoController{
     public function create($data){
       $nome = isset($data['nome']) ? $data['nome'] : null;
       $data_nascimento = isset($data['data']) ? $data['data'] : null;
@@ -25,8 +25,8 @@
         }
       
         if ($nome && $email) {
-          $cadastroModel = new cadastroModel();
-          if ($cadastroModel->cadastrarContato($nome, $data_formatada, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms)) {
+          $contatoModel = new contatoModel();
+          if ($contatoModel->cadastrarContato($nome, $data_formatada, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms)) {
             echo "Contato cadastrado com sucesso!";
           } else {
             echo "Erro ao cadastrar contato.";
@@ -38,7 +38,7 @@
     }
     
     public function read(){
-      $contatos = new CadastroModel;
+      $contatos = new contatoModel;
       $stmt = $contatos->listarContatos();
       return json_encode($stmt);
     }

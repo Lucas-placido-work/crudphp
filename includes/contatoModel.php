@@ -1,7 +1,7 @@
 <?php
 require_once(__DIR__ . '/../config/db.php');
 
-class CadastroModel {
+class ContatoModel {
     private $conn;
 
     public function __construct() {
