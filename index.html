@@ -53,7 +53,7 @@
           <div class="col">
             <input type="checkbox" class="checkbox-control" id="checkWpp" name="checkWpp">
             <label for="checkWpp">Número de celular possui WhatsApp</label>
-          </div>
+          </div>  
           <div class="col">
             <input type="checkbox" class="checkbox-control" id="notifyEmail" name="notifyEmail">
             <label for="notifyEmail">Enviar notificações por E-mail</label>
@@ -101,9 +101,9 @@
             </td>
           </tr>
         </tbody> -->
-            
       </table>
     </div>
+    <div id="spaceModal"></div>
     <footer>
       <div class="p-3 mb-2 text-white" id="idCabecalho">
         <div class="row">
@@ -127,7 +127,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/color/jquery.color-3.0.0.js" integrity="sha256-nXuT4oV5wsIpHV/V7Ay53Vf/1rg2lqpiGWoP9CRk2tM=" crossorigin="anonymous"></script>
-  <script src="auxiliares.js"></script>
   <script>
     $(document).ready(function(){
       $("form").submit(function(){
@@ -186,7 +185,32 @@
 
         $(".editar").click(function(event) {
           var itemId = $(this).data("id");
-          //montar a modal.
+
+          let = contatoEdit = dados.find(item => item.id == itemId);
+          console.log(contatoEdit)
+        
+          $('#spaceModal').load('modal.html', function(){
+            if (contatoEdit) {
+              $('#nomeEdit').val(contatoEdit.nome);
+
+              let dataFormatada = contatoEdit.data_nascimento.split('-').reverse().join('');
+              $('#dataEdit').val(dataFormatada);
+
+              console.log(contatoEdit.email)
+              
+              $('#mailEdit').val(contatoEdit.email);
+              $('#profissaoEdit').val(contatoEdit.profissao); 
+              $('#telefoneEdit').val(contatoEdit.telefone);
+              $('#celularEdit').val(contatoEdit.celular);
+              $('#checkWppEdit').prop('checked',contatoEdit.celular_wpp == 1);
+              $('#notifyEmailEdit').prop('checked',contatoEdit.notify_email == 1);
+              $('#notifySmsEdit').prop('checked',contatoEdit.notify_sms == 1);
+            }
+            $('#modalEdit').modal('show');
+            $('#modalEdit').on('click', '#salvarAlteracoes', function() {
+             console.log('Botão de salvar foi clicado!');
+            });
+          });
         });
 
         $(".excluir").click(function(event) {
