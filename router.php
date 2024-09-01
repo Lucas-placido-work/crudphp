@@ -14,7 +14,8 @@ switch ($action) {
         echo $controller->read();
         break;
     case 'update':
-        // echo $controller->update($data);
+        parse_str(file_get_contents("php://input"), $data);
+        echo $controller->update($data);
         break;
     case 'delete':
         // $id = $_GET['id'] ?? null;
