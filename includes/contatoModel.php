@@ -14,6 +14,7 @@ class ContatoModel {
         
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("ssssiiiii", $nome, $data_nascimento, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms);
+        
         if ($stmt->execute()) {
             $stmt->close();
             $this->conn->close();
@@ -72,8 +73,20 @@ class ContatoModel {
     }
 
     public function removerContato($id){
-        $query = "DELETE FROM contatos WHERE contatos id = ?";
+        $query = "DELETE FROM contatos WHERE id = ?";
         
-}
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param('i',$id);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            $this->conn->close();
+            return true;
+        } else {
+            $stmt->close();
+            $this->conn->close();
+            return false;
+        }
+    }
 }
 ?>

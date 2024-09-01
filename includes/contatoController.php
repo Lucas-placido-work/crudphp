@@ -13,6 +13,7 @@
       $notify_email = isset($data['notifyEmail']) ? true : false;
       $notify_sms = isset($data['notifySms']) ? true : false;
       
+      $telefone = intval($data_nascimento);
       $telefone = intval($telefone);
       $celular = intval($celular);
       
@@ -27,12 +28,15 @@
         if ($nome && $email) {
           $contatoModel = new ContatoModel();
           if ($contatoModel->cadastrarContato($nome, $data_formatada, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms)) {
-            echo "Contato cadastrado com sucesso!";
+            $retorno = json_encode("Contato cadastrado com sucesso!"); 
+            echo $retorno;
           } else {
-            echo "Erro ao cadastrar contato.";
+            $retorno = json_encode("Erro ao cadastrar contato.");
+            echo $retorno;
           }
         } else {
-          echo "Por favor, preencha todos os campos.";
+          $retorno = json_encode("Por favor, preencha nome e email");
+          echo $retorno;
         }
       }
     }
@@ -71,11 +75,33 @@
       
       $contatos = new ContatoModel;
       if($nome && $email){
-        if($contatos->editarContato($id,$nome, $data_formatada, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms))
-          return true;
-        return false;
+        if($contatos->editarContato($id,$nome, $data_formatada, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms)){
+          $retorno = json_encode("Contato editado com sucesso!"); 
+          echo $retorno;
+        }
+        else{
+          $retorno = json_encode("Falha ao tentar editar contato!"); 
+          echo $retorno;
+        }
       }
-      return false;
+      else{  
+        $retorno = json_encode("Nome e email não podem estar vazios!"); 
+        echo $retorno;
+      }
+    }
+
+    public function delete($id){
+      $contatoModel = new ContatoModel();
+      if($contatoModel->removerContato($id)){
+        $retorno = json_encode("Contato removido com sucesso!"); 
+        echo $retorno;
+      }
+      else{
+        $retorno = json_encode("Falhou ao tentar remover contato!"); 
+        echo $retorno;
+      }
+      
+
     }
   }
 ?>
