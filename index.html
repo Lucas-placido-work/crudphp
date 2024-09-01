@@ -176,7 +176,6 @@
     function formatar_telefone_envio(telefone){
       var numeroLimpo = telefone.replace(/\D/g, '');
 
-      console.log(numeroLimpo);
       if(numeroLimpo.length == 10 || numeroLimpo.length == 11) 
         return numeroLimpo;
     }  
@@ -189,7 +188,6 @@
           dataType: 'json',
           success: function(response){
             render_table(response);
-            console.log("Resposta do servidor: " + response);
           },
           error: function(){
             console.log("Erro: ");
@@ -217,7 +215,7 @@
           type: "POST",
           dataType: "json",
           success: function(response){
-            console.log("Resposta do servidor: " + response);
+            alert(response);
             get_dados_table();
           },
           error: function(){
@@ -316,9 +314,9 @@
                 type: "PUT",
                 dataType: "json",
                 success: function(response){
-                  console.log("Resposta do servidor: " + response);
                   $('#modalEdit').modal('hide');
                   get_dados_table();
+                  alert(response);
                 },
                 error: function(){
                   console.log("Erro: ");
@@ -330,7 +328,32 @@
           
         $(".excluir").click(function(event){
           var itemId = $(this).data("id");
-        });
+          
+          $('#spaceModal').load('modalConfirmacao.html', function(){
+            let = contato = dados.find(item => item.id == itemId);
+
+            $('#contatoExclusao').html(contato.nome);
+
+            $('#modalConfirmacao').modal('show');
+
+            $('#btnRemover').click(function(){
+              $.ajax({
+                data: {"id":itemId},
+                url: "router.php?action=delete", 
+                type: "DELETE",
+                dataType: "json",
+                success: function(response){
+                    alert(response);
+                    $('#modalConfirmacao').modal('hide');
+                    get_dados_table();
+                  },
+                  error: function(){
+                    console.log("Erro3: ");
+                  }
+                });
+              });
+            });
+          });
       }
     }
 
