@@ -17,7 +17,7 @@
     </header>
     <section>
       <!-- FORM WRITE -->
-      <form class="form-container">
+      <form class="form-container" id="formCadastro">
         <div class="row g-3">
           <div class="col form-group">
             <label for="nome">Nome Completo</label>
@@ -25,7 +25,7 @@
           </div>
           <div class="col form-group">
             <label for="data">Data de Nascimento</label>
-            <input type="number" class="form-control input-control" id="data" name="data" placeholder="Ex.: 08/02/2001">
+            <input type="text" class="form-control input-control" id="data" name="data" placeholder="Ex.: 08/02/2001">
           </div>
         </div>
         <div class="row g-3">
@@ -41,11 +41,11 @@
         <div class="row g-3">
           <div class="col form-group">
             <label for="telefone">Telefone para contato</label>
-            <input type="number" class="form-control input-control" id="telefone" name="telefone" placeholder="Ex.: (41) 3275-4898">
+            <input type="text" class="form-control input-control" id="telefone" name="telefone" placeholder="Ex.: (41) 3275-4898">
           </div>
           <div class="col form-group">
             <label for="celular">Celular para contato</label>
-            <input type="number" class="form-control input-control" id="celular" name="celular" placeholder="Ex.: (41) 9 9612-8992">
+            <input type="text" class="form-control input-control" id="celular" name="celular" placeholder="Ex.: (41) 9 9612-8992">
           </div>
         </div>
        <!-- FORM CHECKBOX -->
@@ -128,36 +128,125 @@
   <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/color/jquery.color-3.0.0.js" integrity="sha256-nXuT4oV5wsIpHV/V7Ay53Vf/1rg2lqpiGWoP9CRk2tM=" crossorigin="anonymous"></script>
   <script>
+    function aplicar_mask_data(id){
+      $(id).on('input', function(){
+        var input = $(this);
+        var mask = input.val();
+        mask = mask.replace(/\D/g, '');
+        if(mask.length > 2){
+            mask = mask.replace(/(\d{2})(\d)/, '$1/$2');
+        }
+        if(mask.length > 5){
+            mask = mask.replace(/(\d{2})(\d{2})(\d)/, '$1/$2$3');
+        }
+        if(mask.length > 10){
+            mask = mask.substring(0, 10);
+        }
+        input.val(mask);
+      });
+    }
+
+    function aplicar_mask_telefone(id){
+      $(id).on('input', function(){
+        var input = $(this);
+        var mask = input.val();
+        mask = mask.replace(/\D/g, '');
+        if(mask.length > 10){
+          mask = mask.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+        } else if(mask.length > 5){
+          mask = mask.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+        } else if(mask.length > 2){
+          mask = mask.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+        } else{
+          mask = mask.replace(/^(\d*)/, '($1');
+        }
+
+        input.val(mask);
+      });
+    }
+
+    function formatar_data_envio(data){
+      var partes = data.split('/');
+      if(partes.length == 3){
+        return partes[0] + partes[1] + partes[2];
+      }
+      return data;
+    }  
+
+    function formatar_telefone_envio(telefone){
+      var numeroLimpo = telefone.replace(/\D/g, '');
+
+      console.log(numeroLimpo);
+      if(numeroLimpo.length == 10 || numeroLimpo.length == 11) 
+        return numeroLimpo;
+    }  
+
+    function get_dados_table(){
+        $.ajax({
+          data: $(this).serialize(),
+          url: "router.php?action=read", 
+          type: "GET",
+          dataType: 'json',
+          success: function(response){
+            render_table(response);
+            console.log("Resposta do servidor: " + response);
+          },
+          error: function(){
+            console.log("Erro: ");
+          }
+        });
+    }
+
     $(document).ready(function(){
-      $("form").submit(function(){
-        event.preventDefault()
+      get_dados_table();
+      aplicar_mask_data('#data');
+      aplicar_mask_telefone('#telefone');
+      aplicar_mask_telefone('#celular');
+
+      $("#formCadastro").submit(function(){
+        event.preventDefault();
+        var dataFormatada = formatar_data_envio($('#data').val());
+        $('#data').val(dataFormatada);
+        var telefoneFormatado = formatar_telefone_envio($('#telefone').val());
+        $('#telefone').val(telefoneFormatado);
+        var celularFormatado = formatar_telefone_envio($('#celular').val());
+        $('#celular').val(celularFormatado);
         $.ajax({
           data: $(this).serialize(),
           url: "router.php?action=create", 
           type: "POST",
           dataType: "json",
-          success: function(response) {
+          success: function(response){
             console.log("Resposta do servidor: " + response);
+            get_dados_table();
           },
-          error: function() {
+          error: function(){
             console.log("Erro: ");
           }
         });
       });
-      $.ajax({
-        data: $(this).serialize(),
-        url: "router.php?action=read", 
-        type: "GET",
-        dataType: 'json',
-        success: function(response) {
-          render_table(response);
-          console.log("Resposta do servidor: " + response);
-        },
-        error: function() {
-          console.log("Erro: ");
-        }
-      });
     });
+
+    function format_data(data){
+      if(data){
+        return data.split('-').reverse().join('/');
+      }
+    }
+
+    function format_telefone(telefone){
+      if(telefone){
+        telefone = telefone.replace(/\D/g, '');
+        if(telefone.length == 10){
+          return `(${telefone.substring(0, 2)}) ${telefone.substring(2, 6)}-${telefone.substring(6)}`;
+        } 
+        else if(telefone.length == 11){
+          return `(${telefone.substring(0, 2)}) ${telefone.substring(2, 7)}-${telefone.substring(7)}`;
+        } 
+        else{
+          return telefone;
+        }
+      }
+    }
 
     function render_table(dados){
       if(dados.length != 0){
@@ -166,10 +255,10 @@
         dados.forEach(item => {
           tabela += "<tbody><tr>" 
           + '<td>' + item['nome'] + '</td>' 
-          + '<td>' + item['data_nascimento'] + '</td>'
+          + '<td>' + format_data(item['data_nascimento']) + '</td>'
           + '<td>' + item['email'] + '</td>'
-          + '<td>' + item['celular'] + '</td>';
-          
+          + '<td>' + format_telefone(item['celular']) + '</td>';
+            
           tabela += '<td>'
           + '<div>'
           + '<img class="editar" data-id="' + item.id + '" src="assets\\editar.png" alt="editar"></img>'
@@ -183,21 +272,23 @@
         
         $("#spaceTable").html(tabela);
 
-        $(".editar").click(function(event) {
+        $(".editar").click(function(event){
           var itemId = $(this).data("id");
 
           let = contatoEdit = dados.find(item => item.id == itemId);
-          console.log(contatoEdit)
         
           $('#spaceModal').load('modal.html', function(){
-            if (contatoEdit) {
+            if(contatoEdit){
+              $('#idEdit').val(contatoEdit.id);
               $('#nomeEdit').val(contatoEdit.nome);
 
-              let dataFormatada = contatoEdit.data_nascimento.split('-').reverse().join('');
+              let dataFormatada = format_data(contatoEdit.data_nascimento);
               $('#dataEdit').val(dataFormatada);
 
-              console.log(contatoEdit.email)
-              
+              aplicar_mask_data('#dataEdit');
+              aplicar_mask_telefone('#telefoneEdit');
+              aplicar_mask_telefone('#celularEdit');
+
               $('#mailEdit').val(contatoEdit.email);
               $('#profissaoEdit').val(contatoEdit.profissao); 
               $('#telefoneEdit').val(contatoEdit.telefone);
@@ -207,13 +298,37 @@
               $('#notifySmsEdit').prop('checked',contatoEdit.notify_sms == 1);
             }
             $('#modalEdit').modal('show');
-            $('#modalEdit').on('click', '#salvarAlteracoes', function() {
-             console.log('Botão de salvar foi clicado!');
+            $('#btnSalvarEdit').click(function(event){
+              $('#formEditar').submit();
+            });
+          
+            $('#formEditar').submit(function(event){
+              event.preventDefault();
+              var dataFormatada = formatar_data_envio($('#dataEdit').val());
+              $('#dataEdit').val(dataFormatada);
+              var telefoneFormatado = formatar_telefone_envio($('#telefoneEdit').val());
+              $('#telefoneEdit').val(telefoneFormatado);
+              var celularFormatado = formatar_telefone_envio($('#celularEdit').val());
+              $('#celularEdit').val(celularFormatado);
+              $.ajax({
+                data: $(this).serialize(),
+                url: "router.php?action=update", 
+                type: "PUT",
+                dataType: "json",
+                success: function(response){
+                  console.log("Resposta do servidor: " + response);
+                  $('#modalEdit').modal('hide');
+                  get_dados_table();
+                },
+                error: function(){
+                  console.log("Erro: ");
+                }
+              });
             });
           });
         });
-
-        $(".excluir").click(function(event) {
+          
+        $(".excluir").click(function(event){
           var itemId = $(this).data("id");
         });
       }
