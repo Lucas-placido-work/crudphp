@@ -44,11 +44,35 @@ class ContatoModel {
         }
     }
 
-    public function editarContato(){
+    public function editarContato($id, $nome, $data_nascimento, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms) {
+        $query = "UPDATE contatos SET 
+                nome = ?, 
+                data_nascimento = ?, 
+                email = ?, 
+                profissao = ?, 
+                telefone = ?, 
+                celular = ?, 
+                celular_wpp = ?, 
+                notify_email = ?, 
+                notify_sms = ? 
+              WHERE id = ?";
 
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("ssssiiiiii", $nome, $data_nascimento, $email, $profissao, $telefone, $celular, $celular_wpp, $notify_email, $notify_sms, $id);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            $this->conn->close();
+            return true;
+        } else {
+            $stmt->close();
+            $this->conn->close();
+            return false;
+        }
     }
 
-    public function removerContato(){
+    public function removerContato($id){
+        $query = "DELETE FROM contatos WHERE contatos id = ?";
         
     }
 }
