@@ -18,8 +18,8 @@ switch ($action) {
         echo $controller->update($data);
         break;
     case 'delete':
-        // $id = $_GET['id'] ?? null;
-        // echo $controller->delete($id);
+        parse_str(file_get_contents("php://input"), $data);
+        echo $controller->delete($data['id']);
         break;
     default:
         // echo $controller->read();
